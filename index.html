@@ -54,6 +54,27 @@
       setTimeout(function () { document.getElementById('splash').classList.add('done'); }, 600);
     });
     setTimeout(function () { document.getElementById('slow').style.visibility = 'visible'; }, 12000);
+
+    // Bridge: iPhone Safari លុប storage របស់ iframe ឆ្លងដែន → app រក្សាការកំណត់ (Username, theme...) នៅទីនេះ
+    // មិនទទួល token ទេ (session នៅតែក្នុង app)
+    var APP_ORIGIN = /^https:\/\/[a-z0-9-]+\.googleusercontent\.com$/;
+    var KEY = /^nt_\w{1,30}$/;
+    window.addEventListener('message', function (e) {
+      var d = e.data;
+      if (!APP_ORIGIN.test(e.origin) || !d || typeof d !== 'object' || !e.source) return;
+      try {
+        if (d.nt === 'get') {
+          var out = {};
+          for (var i = 0; i < localStorage.length; i++) {
+            var k = localStorage.key(i);
+            if (KEY.test(k) && k !== 'nt_token') out[k] = localStorage.getItem(k);
+          }
+          e.source.postMessage({ nt: 'data', store: out }, e.origin);
+        } else if (d.nt === 'set' && KEY.test(d.k) && d.k !== 'nt_token') {
+          if (d.v === null) localStorage.removeItem(d.k); else localStorage.setItem(d.k, String(d.v).slice(0, 200));
+        }
+      } catch (x) {}
+    });
     frame.src = APP_URL;
   </script>
 </body>
