@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="km">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>NT Construction</title>
+  <meta name="description" content="ប្រព័ន្ធគ្រប់គ្រងសំណង់ NT Construction">
+  <meta name="theme-color" content="#002060">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="NT Construction">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <style>
+    :root { color-scheme: light; --bg: #f4f5f8; --brand: #002060; --muted: #7b8396; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) { color-scheme: dark; --bg: #0f1115; --brand: #9db8ff; --muted: #8d94a5; }
+    }
+    :root[data-theme="dark"] { color-scheme: dark; --bg: #0f1115; --brand: #9db8ff; --muted: #8d94a5; }
+    html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); }
+    /* App ពេញអេក្រង់ — dvh គិតរបារ address bar លើទូរស័ព្ទ */
+    #app { position: fixed; inset: 0; width: 100%; height: 100vh; height: 100dvh; border: 0; display: block; }
+    #splash { position: fixed; inset: 0; display: grid; place-items: center; background: var(--bg);
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; transition: opacity .3s; z-index: 2; }
+    #splash.done { opacity: 0; pointer-events: none; }
+    .box { text-align: center; padding: 0 16px; }
+    .box img { width: 96px; height: 96px; border-radius: 20px; background: #fff; }
+    .name { margin-top: 12px; font-weight: 700; font-size: 18px; color: var(--brand); }
+    .bar { width: 140px; height: 3px; margin: 16px auto 0; border-radius: 3px; background: rgba(127,127,127,.2); overflow: hidden; }
+    .bar span { display: block; width: 40%; height: 100%; background: #2a78d6; animation: s 1s infinite ease-in-out; }
+    @keyframes s { from { transform: translateX(-100%); } to { transform: translateX(260%); } }
+    .slow { margin-top: 14px; font-size: 13px; color: var(--muted); visibility: hidden; }
+    .slow a { color: #2a78d6; }
+  </style>
+</head>
+<body>
+  <div id="splash"><div class="box">
+    <img src="icon-192.png" alt="">
+    <div class="name">NT Construction</div>
+    <div class="bar"><span></span></div>
+    <div class="slow" id="slow">កំពុងភ្ជាប់... បើយូរពេក <a id="direct" href="#" target="_top">បើកដោយផ្ទាល់</a></div>
+  </div></div>
+  <iframe id="app" title="NT Construction"
+    allow="clipboard-write; camera; geolocation"
+    referrerpolicy="no-referrer-when-downgrade"></iframe>
+  <script>
+    // Web App (Google Apps Script) — ប្ដូរតែបន្ទាត់នេះ បើ URL deployment ប្ដូរ
+    var APP_URL = 'https://script.google.com/macros/s/AKfycbwfFoa1pPuUyz9-wbTzYnQncsKVUJOpHUlI230Oqj06UOlkg_2UF8E6PFGfg9yW3wxHFQ/exec';
+    var frame = document.getElementById('app');
+    document.getElementById('direct').href = APP_URL;
+    frame.addEventListener('load', function () {
+      setTimeout(function () { document.getElementById('splash').classList.add('done'); }, 600);
+    });
+    setTimeout(function () { document.getElementById('slow').style.visibility = 'visible'; }, 12000);
+    frame.src = APP_URL;
+  </script>
+</body>
+</html>
